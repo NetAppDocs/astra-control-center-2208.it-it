@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: get-started/acc-create-podsecuritypolicy.html 
+keywords: Create podsecurity policy, pod, security, policy, Astra Control, kubernetes 
+summary: Per consentire ad Astra Control di creare e aggiornare i pod sui cluster gestiti, è necessario creare una policy di sicurezza dei pod meno restrittiva. 
+---
+= Creare una policy di sicurezza pod personalizzata
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+Astra Control deve creare e gestire i pod Kubernetes sui cluster gestiti. Se il cluster utilizza una policy di sicurezza del pod restrittiva che non consente la creazione di pod con privilegi o l'esecuzione di processi all'interno dei container del pod come utente root, è necessario creare una policy di sicurezza del pod meno restrittiva per consentire ad Astra Control di creare e gestire questi pod.
+
+.Fasi
+. Creare un criterio di protezione pod per il cluster meno restrittivo di quello predefinito e salvarlo in un file. Ad esempio:
++
+[source, yaml]
+----
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: astracontrol
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+spec:
+  privileged: true
+  allowPrivilegeEscalation: true
+  allowedCapabilities:
+  - '*'
+  volumes:
+  - '*'
+  hostNetwork: true
+  hostPorts:
+  - min: 0
+    max: 65535
+  hostIPC: true
+  hostPID: true
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+----
+. Creare un nuovo ruolo per la policy di sicurezza del pod.
++
+[source, sh]
+----
+kubectl-admin create role psp:astracontrol \
+    --verb=use \
+    --resource=podsecuritypolicy \
+    --resource-name=astracontrol
+----
+. Associare il nuovo ruolo all'account del servizio.
++
+[source, sh]
+----
+kubectl-admin create rolebinding default:psp:astracontrol \
+    --role=psp:astracontrol \
+    --serviceaccount=astracontrol-service-account:default
+----
+

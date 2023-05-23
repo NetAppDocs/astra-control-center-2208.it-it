@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: get-started/quick-start.html 
+keywords: how to get started with astra, astra quick start, astra installation, how to install astra control, deploy, deployment, kubernetes 
+summary: Inizia subito a utilizzare Astra Control in pochi passaggi. 
+---
+= Avvio rapido per Astra Control Center
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+Questa pagina fornisce una panoramica generale dei passaggi necessari per iniziare a utilizzare Astra Control Center. I collegamenti all'interno di ogni passaggio consentono di accedere a una pagina che fornisce ulteriori dettagli.
+
+Provalo! Se si desidera provare Astra Control Center, è possibile utilizzare una licenza di valutazione di 90 giorni. Vedere link:../get-started/setup_overview.html#add-a-license-for-astra-control-center["informazioni sulle licenze"] per ulteriori informazioni.
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["Uno"] Esaminare i requisiti del cluster Kubernetes
+[role="quick-margin-list"]
+* Astra funziona con i cluster Kubernetes con un backend di storage ONTAP configurato con Trident o un backend di storage Astra Data Store.
+* I cluster devono essere in esecuzione in condizioni di salute, con almeno tre nodi di lavoro online.
+* Il cluster deve eseguire Kubernetes.
+
+
+[role="quick-margin-para"]
+Scopri di più su link:../get-started/requirements.html["Requisiti di Astra Control Center"].
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["Due"] Scaricare e installare Astra Control Center
+[role="quick-margin-list"]
+* Scaricare Astra Control Center dal https://mysupport.netapp.com/site/products/all/details/astra-control-center/downloads-tab["Sito di supporto NetApp pagina Download di Astra Control Center"^].
+* Installare Astra Control Center nell'ambiente locale.
++
+Se lo si desidera, installare Astra Control Center utilizzando Red Hat OperatorHub.
+
++
+Se lo si desidera, installare il centro di controllo Astra con un backend di storage Cloud Volumes ONTAP.
+
+
+
+[role="quick-margin-para"]
+Scopri di più link:../get-started/install_overview.html["Installazione di Astra Control Center"].
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["Tre"] Completare alcune attività di configurazione iniziali
+[role="quick-margin-list"]
+* Aggiunta di una licenza Astra Control e di eventuali licenze ONTAP di supporto.
+* Aggiungi un cluster Kubernetes e Astra Control Center scopre i dettagli.
+* Aggiungere un backend di storage ONTAP.
+* Facoltativamente, Aggiungi un bucket di store di oggetti che memorizzerà i backup delle app.
+
+
+[role="quick-margin-para"]
+Scopri di più su link:../get-started/setup_overview.html["processo di installazione iniziale"].
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["Quattro"] Utilizzare Astra Control Center
+[role="quick-margin-list"]
+Dopo aver completato la configurazione di Astra Control Center, ecco cosa fare:
+
+[role="quick-margin-list"]
+* Gestire un'applicazione. Scopri di più su come link:../use/manage-apps.html["gestire le applicazioni"].
+* Proteggi le app configurando le policy di protezione per le app, replicando le app su sistemi remoti e clonando e migrando le app. Scopri di più su come link:../use/protection-overview.html["proteggi le app"].
+* Gestire gli account (inclusi utenti, ruoli, LDAP per l'autenticazione dell'utente, credenziali, connessioni al repository e altro ancora). Scopri di più su come link:../use/manage-users.html["gestire gli utenti"].
+* Se lo si desidera, connettersi a NetApp Cloud Insights per visualizzare le metriche sullo stato di salute del sistema, sulla capacità e sul throughput all'interno dell'interfaccia utente di Astra Control Center. Scopri di più link:../use/monitor-protect.html["Connessione a Cloud Insights"].
+
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["Cinque"] Continuare da questa guida di avvio rapido
+[role="quick-margin-para"]
+link:../get-started/install_overview.html["Installare Astra Control Center"].
+
+
+
+== Trova ulteriori informazioni
+
+* https://docs.netapp.com/us-en/astra-automation/index.html["Utilizzare l'API di controllo Astra"^]
+

@@ -1,0 +1,137 @@
+---
+sidebar: sidebar 
+permalink: use/manage-packages-acc.html 
+keywords: manage package, packages, install 
+summary: È possibile caricare e installare pacchetti su Astra Control Center. 
+---
+= Gestire i pacchetti software
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/use/
+
+
+NetApp offre funzionalità aggiuntive per Astra Control Center con pacchetti software che è possibile scaricare dal NetApp Support Site. Dopo aver collegato i repository Docker e degli artefatti, è possibile caricare e importare pacchetti per aggiungere questa funzionalità ad Astra Control Center. È possibile utilizzare l'interfaccia utente Web di CLI o Astra Control Center per gestire i pacchetti software.
+
+.Di cosa hai bisogno
+* Kubernetes cluster con Astra Control Center installato
+* Un repository di immagini Docker connesso per contenere le immagini dei pacchetti software. Per ulteriori informazioni, vedere link:manage-connections.html["Gestire le connessioni al repository"].
+* Un repository di artefatti collegato per contenere file binari e artefatti dei pacchetti software. Per ulteriori informazioni, vedere link:manage-connections.html["Gestire le connessioni al repository"].
+* Un pacchetto software dal NetApp Support Site
+
+
+
+
+== Caricare le immagini dei pacchetti software nei repository
+
+Astra Control Center fa riferimento alle immagini dei pacchetti e agli artefatti nei repository collegati. È possibile caricare immagini e artefatti nei repository utilizzando la CLI.
+
+.Fasi
+. Scaricare il pacchetto software dal sito di supporto NetApp e salvarlo su un computer dotato di `kubectl` utility installata.
+. Estrarre il file di pacchetto compresso e modificare la directory nella posizione del file di bundle di Astra Control (ad esempio, `acc.manifest.yaml`).
+. Trasferire le immagini del pacchetto nel repository Docker. Effettuare le seguenti sostituzioni:
++
+** Sostituire BUNDLE_FILE con il nome del file bundle Astra Control (ad esempio, `acc.manifest.yaml`).
+** Sostituire MY_REGISTRY con l'URL del repository Docker.
+** Sostituire MY_REGISTRY_USER con il nome utente.
+** Sostituire MY_REGISTRY_TOKEN con un token autorizzato per il Registro di sistema.
++
+[listing]
+----
+kubectl astra packages push-images -m BUNDLE_FILE -r MY_REGISTRY -u MY_REGISTRY_USER -p MY_REGISTRY_TOKEN
+----
+
+
+. Se il pacchetto contiene artefatti, copiarli nel repository degli artefatti. Sostituire BUNDLE_FILE con il nome del file bundle Astra Control e NETWORK_LOCATION con il percorso di rete in cui copiare i file degli artefatti:
++
+[listing]
+----
+kubectl astra packages copy-artifacts -m BUNDLE_FILE -n NETWORK_LOCATION
+----
+
+
+
+
+== Aggiungere un pacchetto software
+
+È possibile importare pacchetti software utilizzando un file bundle di Astra Control Center. Questa operazione consente di installare il pacchetto e di rendere disponibile il software per Astra Control Center.
+
+
+
+=== Aggiungere un pacchetto software utilizzando l'interfaccia utente Web Astra Control
+
+È possibile utilizzare l'interfaccia utente Web di Astra Control Center per aggiungere un pacchetto software che è stato caricato nei repository collegati.
+
+.Fasi
+. Nell'area di navigazione *Gestisci account*, selezionare *account*.
+. Selezionare la scheda *pacchetti*.
+. Selezionare il pulsante *Aggiungi*.
+. Nella finestra di dialogo di selezione del file, selezionare l'icona di caricamento.
+. Scegliere un file bundle Astra Control, in `.yaml` da caricare.
+. Selezionare *Aggiungi*.
+
+
+.Risultato
+Se il file bundle è valido e le immagini e gli artefatti del pacchetto si trovano nei repository collegati, il pacchetto viene aggiunto ad Astra Control Center. Quando lo stato nella colonna *Status* diventa *Available*, è possibile utilizzare il pacchetto. Per ottenere ulteriori informazioni, passare il mouse sullo stato di un pacchetto.
+
+
+NOTE: Se una o più immagini o artefatti per un pacchetto non vengono trovati nel repository, viene visualizzato un messaggio di errore per quel pacchetto.
+
+
+
+=== Aggiungere un pacchetto software utilizzando l'interfaccia CLI
+
+È possibile utilizzare l'interfaccia CLI per importare un pacchetto software caricato nei repository collegati. Per farlo, devi prima registrare il tuo ID account Astra Control Center e un token API.
+
+.Fasi
+. Utilizzando un browser Web, accedere all'interfaccia utente Web di Astra Control Center.
+. Dalla dashboard, selezionare l'icona utente in alto a destra.
+. Selezionare *API access*.
+. Annotare l'ID account nella parte superiore della schermata.
+. Selezionare *generate API token*.
+. Nella finestra di dialogo visualizzata, selezionare *generate API token*.
+. Prendere nota del token risultante e selezionare *Chiudi*. Nella CLI, modificare le directory in base alla posizione di `.yaml` file bundle nel contenuto del pacchetto estratto.
+. Importare il pacchetto utilizzando il file bundle, effettuando le seguenti sostituzioni:
++
+** Sostituire BUNDLE_FILE con il nome del file bundle Astra Control.
+** Sostituire IL SERVER con il nome DNS dell'istanza di Astra Control.
+** Sostituire ACCOUNT_ID e TOKEN con l'ID account e il token API registrati in precedenza.
++
+[listing]
+----
+kubectl astra packages import -m BUNDLE_FILE -u SERVER -a ACCOUNT_ID -k TOKEN
+----
+
+
+
+
+.Risultato
+Se il file bundle è valido e le immagini e gli artefatti del pacchetto si trovano nei repository collegati, il pacchetto viene aggiunto ad Astra Control Center.
+
+
+NOTE: Se una o più immagini o artefatti per un pacchetto non vengono trovati nel repository, viene visualizzato un messaggio di errore per quel pacchetto.
+
+
+
+== Rimuovere un pacchetto software
+
+È possibile utilizzare l'interfaccia utente Web di Astra Control Center per rimuovere un pacchetto software precedentemente importato in Astra Control Center.
+
+.Fasi
+. Nell'area di navigazione *Gestisci account*, selezionare *account*.
+. Selezionare la scheda *pacchetti*.
++
+In questa pagina è possibile visualizzare l'elenco dei pacchetti installati e i relativi stati.
+
+. Nella colonna *azioni* del pacchetto, aprire il menu delle azioni.
+. Selezionare *Delete* (Elimina).
+
+
+.Risultato
+Il pacchetto viene cancellato da Astra Control Center, ma le immagini e gli artefatti del pacchetto rimangono nei repository.
+
+[discrete]
+== Trova ulteriori informazioni
+
+* link:manage-connections.html["Gestire le connessioni al repository"]
+

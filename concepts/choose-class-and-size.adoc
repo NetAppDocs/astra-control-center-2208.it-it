@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: concepts/choose-class-and-size.html 
+keywords: service level, storage class, storage classes, pv size, persistent volume size, volume size, bandwidth, performance, persistent, volume, kubernetes, containers 
+summary: Il centro di controllo Astra supporta classi di storage Trident supportate da classi di storage ONTAP o Astra Data Store. Devi comprendere come la classe di storage e le dimensioni persistenti del volume possono aiutarti a raggiungere i tuoi obiettivi di performance. 
+---
+= Classi di storage e dimensioni del volume persistente
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/concepts/
+
+
+[role="lead"]
+Il centro di controllo Astra supporta ONTAP o l'archivio dati Astra come back-end dello storage.
+
+
+
+== Panoramica
+
+Astra Control Center supporta:
+
+* *Classi di storage Trident supportate dallo storage Astra Data Store*: Se sono stati installati manualmente uno o più cluster Astra Data Store, Astra Control Center offre la possibilità di importare questi cluster e recuperare la loro topologia (nodi, dischi) e vari stati.
++
+Astra Control Center visualizza il cluster Kubernetes sottostante dalla configurazione di Astra Data Store, il cloud a cui appartiene il cluster Kubernetes, tutti i volumi persistenti forniti da Astra Data Store, il nome del volume interno corrispondente, l'applicazione che utilizza il volume persistente e il cluster che contiene l'applicazione.
+
+* *Classi di storage Trident supportate dallo storage ONTAP*: Se si utilizza un backend ONTAP, Astra Control Center offre la possibilità di importare il backend ONTAP per la segnalazione di varie informazioni di monitoraggio.
+
+
+
+NOTE: Le classi di storage Trident devono essere preconfigurate all'esterno di Astra Control Center.
+
+
+
+== Classi di storage
+
+Quando si aggiunge un cluster ad Astra Control Center, viene richiesto di selezionare una classe di storage precedentemente configurata su tale cluster come classe di storage predefinita. Questa classe di storage verrà utilizzata quando non viene specificata alcuna classe di storage in una dichiarazione di volume persistente (PVC). La classe di storage predefinita può essere modificata in qualsiasi momento all'interno di Astra Control Center e qualsiasi classe di storage può essere utilizzata in qualsiasi momento specificando il nome della classe di storage all'interno del grafico PVC o Helm. Assicurarsi di avere definito solo una singola classe di storage predefinita per il cluster Kubernetes.
+
+Quando si utilizza Astra Control Center integrato con un backend di storage Astra Data Store, dopo l'installazione non vengono definite classi di storage. Sarà necessario creare la classe di storage predefinita Trident e applicarla al backend dello storage. Vedere https://docs.netapp.com/us-en/astra-data-store/get-started/setup-ads.html#set-up-astra-data-store-as-storage-backend["Guida introduttiva di Astra Data Store"] Per creare una classe di storage Astra Data Store predefinita.
+
+
+
+== Per ulteriori informazioni
+
+* https://docs.netapp.com/us-en/trident/index.html["Documentazione di Astra Trident"^]
+

@@ -1,0 +1,171 @@
+---
+sidebar: sidebar 
+permalink: get-started/acc_cluster_cr_options.html 
+keywords: astra cr, cluster cr, astra control center, how to configure, deploy 
+summary: 'Comprendere le opzioni CR del cluster Astra Control Center per le configurazioni personalizzate durante l"implementazione.' 
+---
+= Comprendere le opzioni CR del cluster Astra Control Center
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+È possibile utilizzare le seguenti opzioni CR del cluster Astra Control Center per creare configurazioni personalizzate durante l'implementazione.
+
+|===
+| Impostazione | Tipo | Utilizzare | Esempio di valore | Descrizione 
+
+
+| AstraVersion | stringa | Obbligatorio | 1.5.2 | Versione di AstraControlCenter da implementare. Viene fornito un repository Helm con una versione corrispondente. 
+
+
+| AstraAddress | stringa | Obbligatorio | astra.example.com | Definisce il modo in cui Astra verrà trovata nel data center. Questo indirizzo IP e/o il record DNS A deve essere creato prima di eseguire il provisioning di Astra Control Center. 
+
+
+| Nome account | stringa | Obbligatorio | Esempio | Nome account Astra Control Center. Ci può essere solo uno. 
+
+
+| e-mail | stringa | Obbligatorio | admin@example.com | Il nome utente dell'amministratore da aggiungere come primo utente di Astra. Questo indirizzo e-mail verrà notificato da Astra Control come garanzia di eventi. 
+
+
+| Nome | stringa | Obbligatorio | SRE | Il nome dell'amministratore che supporta Astra. 
+
+
+| LastName | stringa | Obbligatorio | Amministratore | Il cognome dell'amministratore che supporta Astra. 
+
+
+| StorageClass | stringa | Opzionale (valore predefinito) | ontap-gold | Classe di storage da utilizzare per i PVC. Se non impostata, viene utilizzata la classe di storage predefinita. 
+
+
+| VolumeReclaimPolicy | Non definito | Opzionale | Conservare | Recuperare la policy da impostare per i volumi persistenti. 
+
+
+| AstraResourcesScaler | stringa | Obbligatorio | Predefinito | Opzioni di scalabilità per i limiti delle risorse di AstraControlCenter. Vedere <<Combinazioni di configurazioni e incompatibilità,definizione delle complessità>> per capire in che modo queste impostazioni influiscono sulle altre impostazioni. 
+
+
+| AstraKubeConfigSecret | stringa | Obbligatorio | acc-kubeconfig-cred | Se questo valore è presente ed esiste un segreto, l'operatore tenterà di aggiungere KubeConfig per diventare il primo cluster gestito. 
+
+
+| Tipo di ingessType | stringa | Opzionale | Generico (valore predefinito) | Il tipo di ingresso di Astra Control Center deve essere configurato per. I valori validi sono `Generic` e. `AccTraefik`. Vedere <<Combinazioni di configurazioni e incompatibilità,definizione delle complessità>> per capire in che modo queste impostazioni influiscono sulle altre impostazioni. 
+
+
+| AvpDeploy | Booleano | Opzionale | true (valore predefinito) | Opzione che consente all'utente di disattivare l'implementazione di Astra Plugin per l'operatore VMware vSphere. 
+
+
+| ImageRegistry | Non definito | Opzionale |  | Il registro delle immagini container che ospita le immagini dell'applicazione Astra, Astra Control Center Operator e Astra Control Center Helm Repository. 
+
+
+| imageRegistry.name | stringa | Necessario se si utilizza imageRegistry | example.registry.com/astra | Il nome del registro delle immagini. Non utilizzare il prefisso del protocollo. 
+
+
+| imageRegistry.secret | stringa | Necessario se si utilizza imageRegistry | astra-registry-cred | Il nome del segreto Kubernetes utilizzato per l'autenticazione con il registro delle immagini. 
+
+
+| AutoSupport | Non definito | Obbligatorio |  | Indica lo stato di partecipazione all'applicazione di supporto proattivo di NetApp, NetApp Active IQ. È necessaria una connessione a Internet (porta 442) e tutti i dati di supporto sono resi anonimi. 
+
+
+| AutoSupport.registrazione | Booleano | Opzionale, ma anche `enrolled` oppure `url` i campi devono essere selezionati | false (valore predefinito) | La registrazione determina se si desidera inviare dati anonimi a NetApp a scopo di supporto. L'elezione predefinita è `false` E indica che non verranno inviati dati di supporto a NetApp. 
+
+
+| AutoSupport.url | stringa | Opzionale, ma anche `enrolled` oppure `url` i campi devono essere selezionati | https://support.netapp.com/asupprod/post/1.0/postAsup[] | URL determina la destinazione dell'invio dei dati anonimi. 
+
+
+| crds | Non definito | Non definito |  | Opzioni per la gestione dei CRD da parte di Astra Control Center. 
+
+
+| crds.externalTraefik | Booleano | Opzionale | True (valore predefinito) | Per impostazione predefinita, Astra Control Center installerà i CRD Traefik richiesti. I CRDS sono oggetti a livello di cluster e l'installazione potrebbe avere un impatto su altre parti del cluster. È possibile utilizzare questo indicatore per segnalare ad Astra Control Center che questi CRD verranno installati e gestiti dall'amministratore del cluster al di fuori di Astra Control Center. 
+
+
+| crds.externalCertManager | Booleano | Opzionale | True (valore predefinito) | Per impostazione predefinita, Astra Control Center installerà i CRD necessari per il cert-manager. I CRDS sono oggetti a livello di cluster e l'installazione potrebbe avere un impatto su altre parti del cluster. È possibile utilizzare questo indicatore per segnalare ad Astra Control Center che questi CRD verranno installati e gestiti dall'amministratore del cluster al di fuori di Astra Control Center. 
+
+
+| aggiornamento crds.shouldUpgrade | Booleano | Opzionale | Non definito | Determina se i CRD devono essere aggiornati quando Astra Control Center viene aggiornato. 
+
+
+| mtls |  |  |  | Opzioni per il modo in cui Astra Control Center deve implementare il servizio per il servizio mTLS nel cluster. Vedere <<Combinazioni di configurazioni e incompatibilità,definizione delle complessità>> per capire in che modo queste impostazioni influiscono sulle altre impostazioni 
+
+
+| mtls.enabled (mtls abilitato) | Booleano | Opzionale | true (valore predefinito) | Per impostazione predefinita, Astra Control Center utilizza mTLS per la comunicazione dal servizio al servizio. Questa opzione deve essere disattivata quando si utilizza una mesh del servizio per crittografare le comunicazioni dal servizio al servizio. 
+
+
+| mtls.certDuration | stringa | Opzionale | 2140h (questo valore è la durata predefinita) | La durata in ore dell'utilizzo come ciclo di vita del certificato per l'emissione di certificati TLS del servizio. Questa impostazione funziona solo quando `mtls.enabled` è impostato su `true`. 
+|===
+
+
+== Combinazioni di configurazioni e incompatibilità
+
+Alcune impostazioni di configurazione del cluster Astra Control Center CR influiscono notevolmente sul modo in cui viene installato Astra Control Center e potrebbero entrare in conflitto con altre impostazioni. Il contenuto che segue descrive importanti impostazioni di configurazione e come evitare combinazioni incompatibili.
+
+
+
+=== AstraResourcesScaler
+
+Per impostazione predefinita, Astra Control Center implementa le richieste di risorse impostate per la maggior parte dei componenti all'interno di Astra. Questa configurazione consente allo stack software Astra Control Center di migliorare le prestazioni in ambienti con maggiore carico e scalabilità delle applicazioni.
+
+Tuttavia, negli scenari che utilizzano cluster di sviluppo o test più piccoli, il campo CR `AstraResourcesScalar` può essere impostato su `Off`. In questo modo vengono disattivate le richieste di risorse e viene eseguita l'implementazione su cluster più piccoli.
+
+
+
+=== Tipo di ingessType
+
+Sono disponibili due valori validi per il tipo di entressType:
+
+* Generico
+* AccTraefik
+
+
+.Generico (impostazione predefinita)
+Quando `ingressType` è impostato su `Generic`, Astra Control non installa alcuna risorsa di ingresso. L'ipotesi è che l'utente abbia un metodo comune per proteggere e instradare il traffico attraverso la propria rete alle applicazioni in esecuzione sui cluster Kubernetes e che desideri utilizzare gli stessi meccanismi in questo caso. Quando l'utente crea un ingresso per instradare il traffico ad Astra Control, l'ingresso deve puntare al servizio traefik interno sulla porta 80. Di seguito viene riportato un esempio di una risorsa di ingresso Nginx che funziona con l'impostazione Generic ingressType.
+
+[listing]
+----
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netapp-acc-ingress
+  namespace: [netapp-acc or custom namespace]
+spec:
+  ingressClassName: [class name for nginx controller]
+  tls:
+  - hosts:
+    - <ACC address>
+    secretName: [tls secret name]
+  rules:
+  - host: <ACC addess>
+    http:
+      paths:
+        - path:
+          backend:
+            service:
+              name: traefik
+              port:
+                number: 80
+          pathType: ImplementationSpecific
+----
+
+WARNING: Se mTLS viene disattivato utilizzando l'impostazione mtls.Enabled in CR, è necessario utilizzare `ingressType: Generic`.
+
+.AccTraefik
+Quando `ingressType` è impostato su `AccTraefik`, Astra Control Center implementa il proprio gateway Traefik come servizio di tipo Kubernetes LoadBalancer. Gli utenti devono fornire un bilanciamento del carico esterno (come MetalLB) per Astra Control Center per ottenere un IP esterno.
+
+
+
+=== mtls
+
+Le impostazioni utilizzate in CR determinano la modalità di protezione della comunicazione intra-applicazione. È molto importante che l'utente sappia in anticipo se utilizzerà o meno una mesh di servizio.
+
+* `enabled=true`: Quando questa impostazione è attivata, Astra implementa una rete di comunicazione interna service-to-service che protegge tutto il traffico all'interno dell'applicazione.
+
+
+
+WARNING: Non coprire Astra Control Center in una mesh di servizio mentre questa impostazione è `true`.
+
+* `enabled=false`: Quando questa impostazione è disattivata, Astra Control Center non protegge il traffico interno ed è necessario proteggere gli spazi dei nomi Astra in modo indipendente con una mesh del servizio.
+
+
+
+WARNING: Se mTLS viene disattivato utilizzando l'impostazione mtls.Enabled in CR, è necessario utilizzare `ingressType: Generic`.
+
+
+WARNING: Se non viene utilizzata alcuna mesh di servizio e questa impostazione è disattivata, la comunicazione interna non sarà sicura.

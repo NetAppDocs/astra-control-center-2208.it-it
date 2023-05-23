@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: get-started/add-custom-tls-certificate.html 
+keywords: login, Astra Control Center, web ui, tls, certificate 
+summary: 'È possibile caricare e verificare un certificato TLS firmato da un"autorità di certificazione di terze parti (CA) per sostituire il certificato Astra Control Center autofirmato.' 
+---
+= Aggiungere un certificato TLS personalizzato
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/get-started/
+
+
+È possibile rimuovere il certificato TLS autofirmato esistente e sostituirlo con un certificato TLS firmato da un'autorità di certificazione (CA).
+
+.Di cosa hai bisogno
+* Kubernetes cluster con Astra Control Center installato
+* Accesso amministrativo a una shell dei comandi sul cluster da eseguire `kubectl` comandi
+* Chiave privata e file di certificato dalla CA
+
+
+
+
+== Rimuovere il certificato autofirmato
+
+Rimuovere il certificato TLS autofirmato esistente.
+
+. Utilizzando SSH, accedere al cluster Kubernetes che ospita Astra Control Center come utente amministrativo.
+. Individuare il segreto TLS associato al certificato corrente utilizzando il seguente comando, sostituendo `<ACC-deployment-namespace>` Con lo spazio dei nomi di implementazione di Astra Control Center:
++
+[source, sh]
+----
+kubectl get certificate -n <ACC-deployment-namespace>
+----
+. Eliminare il certificato e il segreto attualmente installati utilizzando i seguenti comandi:
++
+[source, sh]
+----
+kubectl delete cert cert-manager-certificates -n <ACC-deployment-namespace>
+kubectl delete secret secure-testing-cert -n <ACC-deployment-namespace>
+----
+
+
+
+
+== Aggiungere un nuovo certificato
+
+Aggiungere un nuovo certificato TLS firmato da una CA.
+
+. Utilizzare il seguente comando per creare il nuovo segreto TLS con la chiave privata e i file di certificato della CA, sostituendo gli argomenti tra parentesi <> con le informazioni appropriate:
++
+[source, sh]
+----
+kubectl create secret tls <secret-name> --key <private-key-filename> --cert <certificate-filename> -n <ACC-deployment-namespace>
+----
+. Utilizzare il seguente comando e l'esempio per modificare il file CRD (Custom Resource Definition) del cluster e modificare `spec.selfSigned` valore a. `spec.ca.secretName` Per fare riferimento al segreto TLS creato in precedenza:
++
+[listing]
+----
+kubectl edit clusterissuers.cert-manager.io/cert-manager-certificates -n <ACC-deployment-namespace>
+....
+
+#spec:
+#  selfSigned: {}
+
+spec:
+  ca:
+    secretName: <secret-name>
+----
+. Utilizzare il seguente comando e l'output di esempio per confermare che le modifiche sono corrette e che il cluster è pronto per validare i certificati, sostituendo `<ACC-deployment-namespace>` Con lo spazio dei nomi di implementazione di Astra Control Center:
++
+[listing]
+----
+kubectl describe clusterissuers.cert-manager.io/cert-manager-certificates -n <ACC-deployment-namespace>
+....
+
+Status:
+  Conditions:
+    Last Transition Time:  2021-07-01T23:50:27Z
+    Message:               Signing CA verified
+    Reason:                KeyPairVerified
+    Status:                True
+    Type:                  Ready
+Events:                    <none>
+
+----
+. Creare il `certificate.yaml` file utilizzando il seguente esempio, sostituendo i valori segnaposto tra parentesi <> con le informazioni appropriate:
++
+[source, yaml]
+----
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: <certificate-name>
+  namespace: <ACC-deployment-namespace>
+spec:
+  secretName: <certificate-secret-name>
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  dnsNames:
+  - <astra.dnsname.example.com> #Replace with the correct Astra Control Center DNS address
+  issuerRef:
+    kind: ClusterIssuer
+    name: cert-manager-certificates
+----
+. Creare il certificato utilizzando il seguente comando:
++
+[source, sh]
+----
+kubectl apply -f certificate.yaml
+----
+. Utilizzando il seguente comando e l'output di esempio, verificare che il certificato sia stato creato correttamente e con gli argomenti specificati durante la creazione (ad esempio nome, durata, scadenza di rinnovo e nomi DNS).
++
+[listing]
+----
+kubectl describe certificate -n <ACC-deployment-namespace>
+....
+
+Spec:
+  Dns Names:
+    astra.example.com
+  Duration:  125h0m0s
+  Issuer Ref:
+    Kind:        ClusterIssuer
+    Name:        cert-manager-certificates
+  Renew Before:  61h0m0s
+  Secret Name:   <certificate-secret-name>
+Status:
+  Conditions:
+    Last Transition Time:  2021-07-02T00:45:41Z
+    Message:               Certificate is up to date and has not expired
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2021-07-07T05:45:41Z
+  Not Before:              2021-07-02T00:45:41Z
+  Renewal Time:            2021-07-04T16:45:41Z
+  Revision:                1
+Events:                    <none>
+----
+. Modificare l'opzione TLS CRD di ingresso per indicare il nuovo segreto del certificato utilizzando il seguente comando ed esempio, sostituendo i valori segnaposto tra parentesi <> con le informazioni appropriate:
++
+[listing]
+----
+kubectl edit ingressroutes.traefik.containo.us -n <ACC-deployment-namespace>
+....
+
+# tls:
+#    options:
+#      name: default
+#    secretName: secure-testing-cert
+#    store:
+#      name: default
+
+ tls:
+    options:
+      name: default
+    secretName: <certificate-secret-name>
+    store:
+      name: default
+----
+. Utilizzando un browser Web, accedere all'indirizzo IP di implementazione di Astra Control Center.
+. Verificare che i dettagli del certificato corrispondano ai dettagli del certificato installato.
+. Esportare il certificato e importare il risultato nel gestore dei certificati nel browser Web.
+
