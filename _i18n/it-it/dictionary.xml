@@ -853,7 +853,6 @@
   <block id="e874bd0f330d9513016dc844dfd62e6f" category="paragraph">Seguire la documentazione di AWS per completare i seguenti passaggi. Vedere<block ref="b5a7979c22035fe192b9eb8d0cab1e4a" category="inline-link-rx"></block>.</block>
   <block id="9c7a256a23d947f541662b1e88bac33d" category="list-text">Creare una rete virtuale AWS.</block>
   <block id="92d9212a67ec9da982a091cf92cb4347" category="list-text">Esaminare le istanze di calcolo EC2. Può trattarsi di un server bare metal o di macchine virtuali in AWS.</block>
-  <block id="b881f78be517f5315cfb2d556f3448f7" category="list-text">Se il tipo di istanza non corrisponde già ai requisiti minimi di risorsa Astra per i nodi master e worker, modificare il tipo di istanza in AWS per soddisfare i requisiti Astra. Vedere <block ref="32be9c8362ea42075ea0b5d43bb3b5d0" category="inline-link-macro-rx"></block>.</block>
   <block id="b109e192f966bb3bb3e8cd30e1a59bfa" category="list-text">Creare almeno un bucket AWS S3 per memorizzare i backup.</block>
   <block id="e5c5351f3ea6206a7f110205b4155acc" category="list-text">Creare un AWS Elastic Container Registry (ECR) per ospitare tutte le immagini ACC.</block>
   <block id="9d58e473a9f64a9efe76c63ca0a30602" category="admonition">Se non si crea ECR, il centro di controllo Astra non può accedere ai dati di monitoraggio da un cluster contenente Cloud Volumes ONTAP con un backend AWS. Il problema si verifica quando il cluster che si tenta di rilevare e gestire utilizzando Astra Control Center non dispone dell'accesso ad AWS ECR.</block>
@@ -966,9 +965,6 @@
   <block id="2cce86879561a32f83b0b211ad079596" category="section-title">Installare un cluster RedHat OpenShift su Azure</block>
   <block id="ac7776656696332f732a35f1a0662432" category="paragraph">Il primo passo consiste nell'installare un cluster RedHat OpenShift su Azure.</block>
   <block id="4f6685bd07b182993d024dcf856ff5ae" category="inline-link">Installazione del cluster OpenShift su Azure</block>
-  <block id="fef256305fde869fc9c1b90f96dbebe5" category="list-text"><block ref="6613cf818db4dcdf36b939920f432c05" category="inline-link-rx"></block>.</block>
-  <block id="eed9d4fe807c07d271c864a1240c1c3f" category="inline-link">Installazione di un account Azure</block>
-  <block id="03936dba93dbfb5fc2df3ced6ce0b025" category="list-text"><block ref="2950a8cca92e141f7cc27cfe82878caa" category="inline-link-rx"></block>.</block>
   <block id="9b227636b2d4cea11291793360089d9f" category="section-title">Creare gruppi di risorse Azure</block>
   <block id="b15c7c1cada48f735340ffa1ec2e4b6d" category="paragraph">Creare almeno un gruppo di risorse Azure.</block>
   <block id="f754cf28e9ca6bd457246cb85d6d5535" category="admonition">OpenShift potrebbe creare i propri gruppi di risorse. Oltre a questi, è necessario definire anche i gruppi di risorse di Azure. Fare riferimento alla documentazione di OpenShift.</block>
@@ -2716,4 +2712,8 @@
   <block id="1d79052461351a56ef4f9bf9f5837f4a" category="sidebar">Automatizza con REST API</block>
   <block id="0b79795d3efc95b9976c7c5b933afce2" category="sidebar">Introduzione</block>
   <block id="f28aaf8670a5d0a4f80f0bf5fccb4b1c" category="sidebar">Introduzione ad Astra</block>
+  <block id="1ba6670409b12d2ecffe5f765b22636d" category="list-text">Se il tipo di istanza non corrisponde già ai requisiti minimi di risorsa Astra per i nodi master e worker, modificare il tipo di istanza in AWS per soddisfare i requisiti Astra.  Vedere <block ref="a41c664e3d2520e4c4deb907d0286272" category="inline-link-macro-rx"></block>.</block>
+  <block id="284a8b144f9341c750b469b574fb8c00" category="inline-link">Installazione del cluster OpenShift su Azure</block>
+  <block id="026f21beafa7ab4dd2e0a19c7d485bb6" category="inline-link">Installazione di un account Azure</block>
+  <block id="49ffba9fa4ce5bf749cec20def44c0b9" category="paragraph">Per istruzioni sull'installazione, consulta la documentazione di RedHat all'indirizzo<block ref="2b5694f45e8e8a8a0bd04ce92001fd2c" category="inline-link-rx"></block> e.<block ref="b57239f3f933c36abb901cdf3e168d8f" category="inline-link-rx"></block>.</block>
 </blocks>
